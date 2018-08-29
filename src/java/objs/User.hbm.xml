@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 28, 2018 2:40:34 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="objs.User" table="user" catalog="dispatcher" optimistic-lock="version">
+        <id name="username" type="string">
+            <column name="username" length="16" />
+            <generator class="assigned" />
+        </id>
+        <property name="firstname" type="string">
+            <column name="firstname" length="16" not-null="true" />
+        </property>
+        <property name="lastname" type="string">
+            <column name="lastname" length="16" not-null="true" />
+        </property>
+        <property name="passhash" type="string">
+            <column name="passhash" length="32" not-null="true" />
+        </property>
+        <property name="address" type="string">
+            <column name="address" length="16" not-null="true" />
+        </property>
+        <property name="birthdate" type="string">
+            <column name="birthdate" length="16" not-null="true" />
+        </property>
+        <property name="contact" type="string">
+            <column name="contact" length="16" not-null="true" />
+        </property>
+        <property name="category" type="string">
+            <column name="category" length="16" not-null="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="32" />
+        </property>
+    </class>
+</hibernate-mapping>
