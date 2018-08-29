@@ -41,5 +41,15 @@ Contributor(s):
 -->
 <hibernate-reverse-engineering>
   <schema-selection match-catalog="dispatcher"/>
+  <table-filter match-name="location"/>
+  <table-filter match-name="citylinedrivers"/>
+  <table-filter match-name="driver"/>
+  <table-filter match-name="citystop"/>
+  <table-filter match-name="intercitystop"/>
+  <table-filter match-name="agency"/>
+  <table-filter match-name="intercityline"/>
   <table-filter match-name="user"/>
+  <table-filter match-name="bus"/>
+  <table-filter match-name="citylinetimetable"/>
+  <table-filter match-name="cityline"/>
 </hibernate-reverse-engineering>

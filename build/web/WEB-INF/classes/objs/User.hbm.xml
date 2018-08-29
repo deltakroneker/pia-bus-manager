@@ -1,36 +1,39 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Aug 28, 2018 2:40:34 PM by Hibernate Tools 4.3.1 -->
+<!-- Generated Aug 29, 2018 3:29:06 PM by Hibernate Tools 4.3.1 -->
 <hibernate-mapping>
     <class name="objs.User" table="user" catalog="dispatcher" optimistic-lock="version">
-        <id name="username" type="string">
-            <column name="username" length="16" />
-            <generator class="assigned" />
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
         </id>
+        <many-to-one name="location" class="objs.Location" fetch="select">
+            <column name="idlocation" not-null="true" />
+        </many-to-one>
+        <property name="username" type="string">
+            <column name="username" length="20" not-null="true" />
+        </property>
         <property name="firstname" type="string">
-            <column name="firstname" length="16" not-null="true" />
+            <column name="firstname" length="20" not-null="true" />
         </property>
         <property name="lastname" type="string">
-            <column name="lastname" length="16" not-null="true" />
+            <column name="lastname" length="20" not-null="true" />
         </property>
-        <property name="passhash" type="string">
-            <column name="passhash" length="32" not-null="true" />
+        <property name="password" type="string">
+            <column name="password" length="20" not-null="true" />
         </property>
-        <property name="address" type="string">
-            <column name="address" length="16" not-null="true" />
-        </property>
-        <property name="birthdate" type="string">
-            <column name="birthdate" length="16" not-null="true" />
+        <property name="birthdate" type="date">
+            <column name="birthdate" length="10" not-null="true" />
         </property>
         <property name="contact" type="string">
-            <column name="contact" length="16" not-null="true" />
+            <column name="contact" length="20" not-null="true" />
         </property>
         <property name="category" type="string">
-            <column name="category" length="16" not-null="true" />
+            <column name="category" length="20" not-null="true" />
         </property>
         <property name="email" type="string">
-            <column name="email" length="32" />
+            <column name="email" length="30" />
         </property>
     </class>
 </hibernate-mapping>

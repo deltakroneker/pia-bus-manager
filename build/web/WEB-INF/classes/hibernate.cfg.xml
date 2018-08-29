@@ -44,6 +44,16 @@ Contributor(s):
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/dispatcher?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">root</property>
+    <mapping resource="objs/Location.hbm.xml"/>
+    <mapping resource="objs/Intercitystop.hbm.xml"/>
     <mapping resource="objs/User.hbm.xml"/>
+    <mapping resource="objs/Driver.hbm.xml"/>
+    <mapping resource="objs/Citylinedrivers.hbm.xml"/>
+    <mapping resource="objs/Agency.hbm.xml"/>
+    <mapping resource="objs/Intercityline.hbm.xml"/>
+    <mapping resource="objs/Citystop.hbm.xml"/>
+    <mapping resource="objs/Citylinetimetable.hbm.xml"/>
+    <mapping resource="objs/Cityline.hbm.xml"/>
+    <mapping resource="objs/Bus.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2018 3:29:06 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="objs.Driver" table="driver" catalog="dispatcher" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="firstname" type="string">
+            <column name="firstname" length="20" not-null="true" />
+        </property>
+        <property name="lastname" type="string">
+            <column name="lastname" length="20" not-null="true" />
+        </property>
+        <property name="birthdate" type="date">
+            <column name="birthdate" length="10" not-null="true" />
+        </property>
+        <property name="startyear" type="int">
+            <column name="startyear" not-null="true" />
+        </property>
+        <property name="availability" type="int">
+            <column name="availability" not-null="true" />
+        </property>
+        <set name="citylinedriverses" table="citylinedrivers" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="iddriver" not-null="true" />
+            </key>
+            <one-to-many class="objs.Citylinedrivers" />
+        </set>
+        <set name="intercitylines" table="intercityline" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="iddriver" not-null="true" />
+            </key>
+            <one-to-many class="objs.Intercityline" />
+        </set>
+    </class>
+</hibernate-mapping>

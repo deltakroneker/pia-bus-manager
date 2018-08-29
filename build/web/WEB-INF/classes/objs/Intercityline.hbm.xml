@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 29, 2018 3:29:06 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="objs.Intercityline" table="intercityline" catalog="dispatcher" optimistic-lock="version">
+        <id name="id" type="java.lang.Integer">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="agency" class="objs.Agency" fetch="select">
+            <column name="idagency" not-null="true" />
+        </many-to-one>
+        <many-to-one name="bus" class="objs.Bus" fetch="select">
+            <column name="idbus" not-null="true" />
+        </many-to-one>
+        <many-to-one name="driver" class="objs.Driver" fetch="select">
+            <column name="iddriver" not-null="true" />
+        </many-to-one>
+        <property name="starttime" type="timestamp">
+            <column name="starttime" length="19" not-null="true" />
+        </property>
+        <property name="headline" type="string">
+            <column name="headline" length="40" not-null="true" />
+        </property>
+        <set name="intercitystops" table="intercitystop" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="idline" not-null="true" />
+            </key>
+            <one-to-many class="objs.Intercitystop" />
+        </set>
+    </class>
+</hibernate-mapping>
