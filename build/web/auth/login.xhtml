@@ -8,39 +8,48 @@
         <title>Login</title>
     </h:head>
     <h:body>
+        <div align="center">
 
-        <h:form>
-            
-            <p:panelGrid columns="2">
+            <h:form id="login-form">
                 
-                <f:facet name="header">
-                    Login form
-                </f:facet>
-                <h:outputText value="Username"/>
-                <p:inputText value="#{loginCtrl.username}" />
+                <br></br>
+
+                <p:panelGrid columns="2">
+
+                    <f:facet name="header">
+                        Login form
+                    </f:facet>
+                    <h:outputText value="Username"/>
+                    <p:inputText value="${navigationCtrl.username}" />
+
+                    <h:outputText value="Password"/>
+                    <p:password value="${navigationCtrl.password}" />
+
+                    <f:facet name="footer">
+                            <p:commandButton value="Login" action="#{navigationCtrl.login()}" />
+                    </f:facet>
+
+                </p:panelGrid>
                 
-                <h:outputText value="Password"/>
-                <p:password value="#{loginCtrl.password}" />
-                
-                <f:facet name="footer">
-                    <p:commandButton value="Login" action="#{loginCtrl.login()}" />
-                </f:facet>
-                
-            </p:panelGrid>
-            
-            <p:panelGrid columns="1">
-                
-                <f:facet name="header">
-                    -- or -
-                </f:facet>
-                
-                <h:form>
-                    <p:commandButton validateClient="Continue as guest" action="#{navigationCtrl.guestHome()}" />
-                </h:form>
-                
-            </p:panelGrid>
-            
-        </h:form>
+                <br></br>
+
+                <p:panelGrid columns="2">
+
+                    <f:facet name="header">
+                        -- or -
+                    </f:facet>
+
+                    <h:form>
+                        <p:commandButton value="Register" action="#{navigationCtrl.register()}" />
+                    </h:form>
+                    <h:form>
+                        <p:commandButton value="Continue as guest" action="#{navigationCtrl.guestHome()}" />
+                    </h:form>
+
+                </p:panelGrid>
+
+            </h:form>
+        </div>
 
     </h:body>
 </html>
