@@ -1,0 +1,188 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>New Inter-city line</title>
+    </h:head>
+    <h:body>
+
+            <div align="center"> 
+            <h:form id="niclmenu">
+                <p:panelGrid columns="3">   
+                        <f:facet name="header">
+                            <p:outputLabel id="userName">Welcome ${navigationCtrl.username} (</p:outputLabel>
+                            <p:outputLabel id="firstName">${navigationCtrl.firstName} </p:outputLabel>
+                            <p:outputLabel id="lastName">${navigationCtrl.lastName})</p:outputLabel>
+
+                        </f:facet>
+                    <p:commandButton value="Back" action="#{navigationCtrl.adminICLM()}"/>
+                    <p:commandButton value="Home" action="#{navigationCtrl.adminHome()}"/>
+                    <p:commandButton value="Logout" action="#{navigationCtrl.logout()}"/>
+                </p:panelGrid>    
+            </h:form> <br/><br/>                
+            
+            <br/><br/> 
+
+            <h:form id="steps">
+                
+                <h:form id="step1" rendered="${interCityLinesCtrl.step==1}">
+                   
+                    <h:form id="niclcreate">
+                        <p:panelGrid columns="2">
+                            <f:facet name="header">
+                                General info
+                            </f:facet>
+
+                            <h:outputText value="From"/>
+                            <p:inputText value="${interCityLinesCtrl.from}" />
+
+                            <h:outputText value="To"/>
+                            <p:inputText value="${interCityLinesCtrl.to}"/>
+                            
+                            <h:outputText value="Agency"/>
+                            <p:selectOneMenu id="agencypick2" value="${interCityLinesCtrl.agency}">
+                                <f:selectItems value="#{agenciesCtrl.LoadAgencyIDs()}"/>
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Start time"/>
+                            <p:calendar pattern="dd/mm/yyyy hh:mm:ss" value="${interCityLinesCtrl.starttime}"  />
+
+                        </p:panelGrid>
+                        
+                        <p:commandButton value="Next step" actionListener="#{interCityLinesCtrl.next()}" update=":steps" />
+
+                    </h:form>
+                </h:form>
+
+                <h:form id="step2" rendered="${interCityLinesCtrl.step==2}">
+                    <h:form id="niclcreate2">
+                        <p:panelGrid columns="2">
+                            <f:facet name="header">
+                                Bus and Driver
+                            </f:facet>
+
+                             <h:outputText value="Bus"/>
+                            <p:selectOneMenu id="intercitylinepick2" value="${interCityLinesCtrl.busnum}" >
+                                <f:selectItems value="#{busesCtrl.LoadUnassignedBusesIDs()}" />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Driver"/>
+                            <p:selectOneMenu id="driverpick2" value="${interCityLinesCtrl.drivernum}">
+                                <f:selectItems value="#{driverCtrl.getUnassignedDriversIDs()}"/>
+                            </p:selectOneMenu>
+
+                        </p:panelGrid>
+                        
+                        <p:commandButton value="Next step" actionListener="#{interCityLinesCtrl.next()}" update=":steps" />
+
+                    </h:form>
+                    <br/><br/>
+                </h:form>
+
+                <h:form id="step3" rendered="${interCityLinesCtrl.step==3}">
+                    <h:form id="niclcreate3">
+                        <p:panelGrid columns="2">
+                            <f:facet name="header">
+                                Stops
+                            </f:facet>
+
+                            <h:outputText value="Intercity line ID:"/>
+                            <p:selectOneMenu id="intercitylinepick3" value="${interCityLinesCtrl.linename}" >
+                                <f:selectItems value="#{interCityLinesCtrl.LoadLinesNames()}" />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="# Num"/>
+                            <p:inputText value="${interCityLinesCtrl.rnum}" />
+                            
+                            <h:outputText value="Stop code"/>
+                            <p:inputText value="${interCityLinesCtrl.stopcode}" />
+                            
+                            <h:outputText value="Arrival time"/>
+                            <p:calendar pattern="dd/mm/yyyy hh:mm:ss" value="${interCityLinesCtrl.arrival}" />
+                            
+                            <f:facet name="footer">
+                                <p:commandButton value="Add stop" actionListener="#{interCityLinesCtrl.AddStop()}" update=":steps" />
+                            </f:facet>
+
+                        </p:panelGrid>
+
+                        
+                        <p:commandButton value="Next step" actionListener="#{interCityLinesCtrl.next()}" update=":steps" />
+
+                    </h:form>
+                </h:form>
+                
+            </h:form>  <br/><br/> 
+
+            
+            
+            <div>
+                <h:form id="busform2" >
+                        <p:dataTable id="bustable2" var="bus" value="#{busesCtrl.LoadLines()}" rows="5"
+                                                        paginator="true"
+                                                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+                               <p:column headerText="ID">
+                                   <h:outputText value="#{bus.id}" />
+                               </p:column>
+
+                               <p:column headerText="Manufacturer" >
+                                   <h:outputText value="#{bus.manufacturer}" />
+                               </p:column>
+
+                               <p:column headerText="Model" >
+                                   <h:outputText value="#{bus.model}"  />
+                               </p:column>
+
+                               <p:column headerText="Seats" >
+                                   <h:outputText value="#{bus.seats}"  />
+                               </p:column>
+
+                               <p:column headerText="Status" >
+                                   <h:outputText value="AVAILABLE" rendered="#{bus.availability==1}" />
+                                   <h:outputText value="NOT AVAILABLE" rendered="#{bus.availability==0}" />
+                               </p:column>
+                           </p:dataTable>
+                    </h:form> 
+                    <br/><br/>
+                    <h:form id="driversform2">
+                            <p:dataTable id="dtable2" var="driver" value="#{driverCtrl.getAllDrivers()}" rows="5"
+                                                        paginator="true"
+                                                        paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+                               <p:column headerText="ID">
+                                   <h:outputText value="#{driver.id}" />
+                               </p:column>
+
+                               <p:column headerText="First name" >
+                                   <h:outputText value="#{driver.firstname}" />
+                               </p:column>
+
+                               <p:column headerText="Last name" >
+                                   <h:outputText value="#{driver.lastname}"  />
+                               </p:column>
+
+                               <p:column headerText="Birthdate" >
+                                   <h:outputText value="#{driver.birthdate}"  />
+                               </p:column>
+
+                                <p:column headerText="Start year" >
+                                    <h:outputText value="#{driver.startyear}"  />
+                               </p:column>
+
+                               <p:column headerText="Status" >
+                                   <h:outputText value="AVAILABLE" rendered="#{driver.availability==1}" />
+                                   <h:outputText value="NOT AVAILABLE" rendered="#{driver.availability==0}" />
+                               </p:column>
+                           </p:dataTable>
+                    </h:form> 
+            </div>
+            
+        </div>   
+
+    </h:body>
+</html>
+

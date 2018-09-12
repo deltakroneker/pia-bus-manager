@@ -79,7 +79,11 @@ public class Navigation implements Serializable {
        return Constants.LOGIN_PAGE;
     }
     
-    public String register(){
+    public String loginPage(){
+       return Constants.LOGIN_PAGE;
+    }
+    
+    public String registerPage(){
        return Constants.REGISTER_PAGE;
     }
     
@@ -117,6 +121,18 @@ public class Navigation implements Serializable {
       
     public String adminDCL(){
         return Constants.ADMINDCL_PAGE;
+    }
+    
+    public String adminNICL(){
+        return Constants.ADMINNICL_PAGE;
+    }
+    
+    public String adminNB(){
+        return Constants.ADMINNB_PAGE;
+    }
+    
+    public String adminNA(){
+        return Constants.ADMINNA_PAGE;
     }
     
     /**

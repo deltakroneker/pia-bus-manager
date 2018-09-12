@@ -16,8 +16,11 @@ public class Constants {
     public static String ADMINND_PAGE = "/admin/newDriver";
     public static String ADMINNCL_PAGE = "/admin/newCityLine";
     public static String ADMINDCL_PAGE = "/admin/disableCityLine";
-
     
+    public static String ADMINNICL_PAGE = "/admin/newInterCityLine";
+    public static String ADMINNB_PAGE = "/admin/newBus";
+    public static String ADMINNA_PAGE = "/admin/newAgency";
+
     public static String SALT = "salt-bae";
     public static String ADMIN_USERNAME = "admin";
     
