@@ -3,6 +3,9 @@ package ctrls;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -35,6 +38,76 @@ public class InterCityLines implements Serializable {
     private int rnum;
     private String stopcode;
     private Date arrival;
+    
+    public class Top10{
+        private Date time;
+        private String from;
+        private String to;
+        private String agency;
+        
+        public Top10(Date time, String from, String to, String agency){
+            this.time = time;
+            this.from = from;
+            this.to = to;
+            this.agency = agency;
+        }
+
+        /**
+         * @return the time
+         */
+        public Date getTime() {
+            return time;
+        }
+
+        /**
+         * @param time the time to set
+         */
+        public void setTime(Date time) {
+            this.time = time;
+        }
+
+        /**
+         * @return the from
+         */
+        public String getFrom() {
+            return from;
+        }
+
+        /**
+         * @param from the from to set
+         */
+        public void setFrom(String from) {
+            this.from = from;
+        }
+
+        /**
+         * @return the to
+         */
+        public String getTo() {
+            return to;
+        }
+
+        /**
+         * @param to the to to set
+         */
+        public void setTo(String to) {
+            this.to = to;
+        }
+
+        /**
+         * @return the agency
+         */
+        public String getAgency() {
+            return agency;
+        }
+
+        /**
+         * @param agency the agency to set
+         */
+        public void setAgency(String agency) {
+            this.agency = agency;
+        }
+    }
     
     public InterCityLines() {
     }
@@ -199,6 +272,79 @@ public class InterCityLines implements Serializable {
         stopcode="";
         arrival=null;
     }
+    
+    public List<Top10> get10MostRecentLines(){
+        
+        List<Top10> top10lines = new ArrayList<>();
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        Session s = NewHibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        Intercityline icl;
+        Intercitystop ics;
+        
+         try {
+            tx = s.beginTransaction(); 
+            
+            Query q1 = s.createQuery("FROM Intercitystop ORDER BY arrivaltime ASC");
+            List<Intercitystop> stops = q1.list();
+            for (Intercitystop stop : stops) {
+                 int id = stop.getIntercityline().getId() ;
+                 
+                 Query q2 = s.createQuery("FROM Intercitystop WHERE idline = :theid ORDER BY number DESC");
+                 q2.setParameter("theid", id);
+                 List<Intercitystop> tempstops = q2.list();
+                 List<Integer> numbers = new ArrayList<>();
+                 
+                 for (Intercitystop st : tempstops){
+                     numbers.add(st.getNumber());
+                 }
+                 
+                 int maxNum;
+                 if (!numbers.isEmpty()){
+                     maxNum = numbers.get(0);
+                     
+                     for (Intercitystop stp : stops){
+                         int lineId = stp.getIntercityline().getId();
+                         int lineNum = stp.getNumber();
+                         if (lineId == id && lineNum <= maxNum && lineNum > stop.getNumber()) {
+                             Top10 entry = new Top10(stop.getArrivaltime(), stop.getName(), stp.getName(), "");
+                             top10lines.add(entry);
+                         }
+                     }
+                     
+                 }
+                 
+             }
+            
+            Collections.sort(top10lines, new Comparator<Top10>() {
+                @Override
+                public int compare(Top10 lhs, Top10 rhs) {
+                    // -1 - less than, 1 - greater than, 0 - equal, all inversed for descending
+                    return lhs.time.compareTo(rhs.time) < 0? -1 : (lhs.time.compareTo(rhs.time) > 0) ? 1 : 0;
+                }
+            });
+     
+            tx.commit();
+            return top10lines.subList(0, 9);
+        } catch (HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }            
+            Logger.getLogger("con").info("Exception: " + ex.getMessage());
+            ex.printStackTrace(System.err);
+            
+        } finally {
+            s.close(); 
+        }
+        
+        return null;
+    }
+    
+    
+    
+    
     
     /**
      * @return the step

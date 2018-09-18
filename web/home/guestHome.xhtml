@@ -14,14 +14,39 @@
                     <f:facet name="header">
                         <p:outputLabel id="userName">Welcome Guest (</p:outputLabel>
                     </f:facet>
-                    <p:commandButton value="Home" action="#{navigationCtrl.guestHome()}"/>
-                    <p:commandButton value="Login" action="#{navigationCtrl.loginPage()}"/>
-                    <p:commandButton value="Register" action="#{navigationCtrl.registerPage()}"/>
-
+                    <h:form>
+                        <p:commandButton value="Home" action="#{navigationCtrl.guestHome()}"/>
+                        <p:commandButton value="Login" action="#{navigationCtrl.loginPage()}"/>
+                        <p:commandButton value="Register" action="#{navigationCtrl.registerPage()}"/>
+                    </h:form>
                 </p:panelGrid>          
-            </form>
-            
+            </h:form>
+
             <br/><br/>
+            
+             <h:form id="guesttop10">
+                 <p:dataTable id="guesttabletop10" var="topp" value="#{interCityLinesCtrl.get10MostRecentLines()}" rows="10"
+                                                 paginator="true"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+                        <p:column headerText="Agency">
+                            <h:outputText value="#{topp.agency}" />
+                        </p:column>
+                     
+                        <p:column headerText="Date" >
+                            <h:outputText value="#{topp.time}"  />
+                        </p:column>
+                     
+                        <p:column headerText="From" >
+                            <h:outputText value="#{topp.from}" />
+                        </p:column>
+
+                        <p:column headerText="To" >
+                            <h:outputText value="#{topp.to}"  />
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
 
         </div>
     </h:body>
