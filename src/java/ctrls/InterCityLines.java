@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
@@ -38,6 +39,12 @@ public class InterCityLines implements Serializable {
     private int rnum;
     private String stopcode;
     private Date arrival;
+    
+    private Date guestTimeFrom;
+    private Date guestTimeTo;
+    private String guestAgency;
+    private String guestFrom;
+    private String guestTo;
     
     public class Top10{
         private Date time;
@@ -106,6 +113,44 @@ public class InterCityLines implements Serializable {
          */
         public void setAgency(String agency) {
             this.agency = agency;
+        }
+    }
+    
+    public class GuestRes {
+        private Date time;
+        private String otp;
+        
+        public GuestRes(Date t, String o){
+            this.time = t;
+            this.otp = o;
+        }
+
+        /**
+         * @return the time
+         */
+        public Date getTime() {
+            return time;
+        }
+
+        /**
+         * @param time the time to set
+         */
+        public void setTime(Date time) {
+            this.time = time;
+        }
+
+        /**
+         * @return the otp
+         */
+        public String getOtp() {
+            return otp;
+        }
+
+        /**
+         * @param otp the stops to set
+         */
+        public void setOtp(String otp) {
+            this.otp = otp;
         }
     }
     
@@ -274,16 +319,12 @@ public class InterCityLines implements Serializable {
     }
     
     public List<Top10> get10MostRecentLines(){
-        
         List<Top10> top10lines = new ArrayList<>();
         
         FacesContext context = FacesContext.getCurrentInstance();
 
         Session s = NewHibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
-        Intercityline icl;
-        Intercitystop ics;
-        
          try {
             tx = s.beginTransaction(); 
             
@@ -342,7 +383,173 @@ public class InterCityLines implements Serializable {
         return null;
     }
     
-    
+    public List<GuestRes> guestResults(){
+        List<Intercitystop> stops = new ArrayList<>();
+        List<GuestRes> tableResults = new ArrayList<>();
+        List<Integer> lineIDs = new ArrayList<>();
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        Session s = NewHibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+        
+         try {
+            tx = s.beginTransaction(); 
+            
+            if ( guestAgency == null && guestFrom == null && guestTo == null && guestTimeFrom == null && guestTimeTo == null) {
+                tx.commit();
+                return tableResults;
+            }
+            
+            Query q1;
+            
+            if (!guestAgency.equals("")) {
+                Query q0 = s.createQuery("SELECT id FROM Agency WHERE name = :aname");
+                q0.setParameter("aname", guestAgency);
+                int agencyid = (int) q0.uniqueResult();
+                
+                q1 = s.createQuery("SELECT id FROM Intercityline WHERE idagency = :idag");
+                q1.setParameter("idag", agencyid);
+                lineIDs = q1.list();
+            } else {
+                q1 = s.createQuery("SELECT id FROM Intercityline");
+                lineIDs = q1.list();
+            }
+            
+            Query q2 = s.createQuery("FROM Intercitystop");
+            stops = q2.list();
+           
+            List<Intercitystop> newstops = new ArrayList<>();
+            for(Intercitystop stt : stops) {
+                if (lineIDs.contains(stt.getIntercityline().getId())) {
+                    newstops.add(stt);
+                }
+            }
+            stops = new ArrayList<>();
+            // newstops sadrzi sve stanice koje su bitne
+            List<Intercitystop> another = new ArrayList<>();
+            if (!guestFrom.equals("")){
+                
+                for (Intercitystop stop : newstops) {
+                    if (stop.getName().equals(guestFrom)){
+                        stops.add(stop);
+                    }
+                }
+                
+                for (Intercitystop stop : stops) {
+                    int lnid = stop.getIntercityline().getId();
+                    int fromnumber = stop.getNumber();
+                    
+                    for (Intercitystop st: newstops) {
+                        if (st.getIntercityline().getId() == lnid && st.getNumber()>fromnumber){
+                            another.add(st);
+                        }
+                    }
+                }
+                newstops = another;
+            }
+            stops = new ArrayList<>();
+            another = new ArrayList<>();
+            if (!guestTo.equals("")){
+                
+                for (Intercitystop stop : newstops) {
+                    if (stop.getName().equals(guestTo)){
+                        stops.add(stop);
+                    }
+                }
+                
+                for (Intercitystop stop : stops) {
+                    int lnid = stop.getIntercityline().getId();
+                    int fromnumber = stop.getNumber();
+                    
+                    for (Intercitystop st: newstops) {
+                        if (st.getIntercityline().getId() == lnid && st.getNumber()<fromnumber){
+                            another.add(st);
+                        }
+                    }
+                }
+                newstops = another;
+            }
+            stops = new ArrayList<>();
+            another = new ArrayList<>();
+            if (guestTimeFrom != null){
+                
+                for (Intercitystop stop : newstops) {
+                    Date oiu;
+
+                    if (!this.guestFrom.equals("")){
+                        Query qa = s.createQuery("SELECT arrivaltime FROM Intercitystop WHERE name= :fromname AND idline= :para");
+                        qa.setParameter("para", stop.getIntercityline().getId());
+                        qa.setParameter("fromname", this.guestFrom);
+                        oiu = (Date) qa.uniqueResult();
+                    } else if (!this.guestTo.equals("")){
+                        Query qa = s.createQuery("SELECT arrivaltime FROM Intercitystop WHERE name= :fromname AND idline= :para");
+                        qa.setParameter("para", stop.getIntercityline().getId());
+                        qa.setParameter("fromname", stop.getName());
+                        oiu = (Date) qa.uniqueResult();
+                    } else {
+                        oiu = null;
+                    }
+                    
+                    if (!oiu.before(this.guestTimeFrom)){
+                        another.add(stop);
+                    }
+                }
+                newstops = another;
+            }
+            
+            List<GuestRes> gResults = new ArrayList<>();
+            Date outputTime;
+            String output = "[ ";
+            if (!this.guestFrom.equals("")){
+                output += this.guestFrom ;
+            }
+            if (!this.guestTo.equals("")) {
+                output += " --> ";
+                output += this.guestTo;
+            }
+            output += " ] ";
+            
+            GuestRes gr;
+            for(Intercitystop sx : newstops) {
+                String otp = output + "# " + sx.getName();
+                if (!this.guestFrom.equals("")){
+                    Query qa = s.createQuery("SELECT arrivaltime FROM Intercitystop WHERE name= :fromname AND idline= :para");
+                    qa.setParameter("para", sx.getIntercityline().getId());
+                    qa.setParameter("fromname", this.guestFrom);
+                    outputTime = (Date) qa.uniqueResult();
+                } else if (!this.guestTo.equals("")){
+                    Query qa = s.createQuery("SELECT arrivaltime FROM Intercitystop WHERE name= :fromname AND idline= :para");
+                    qa.setParameter("para", sx.getIntercityline().getId());
+                    qa.setParameter("fromname", sx.getName());
+                    outputTime = (Date) qa.uniqueResult();
+                } else {
+                    outputTime = null;
+                }
+                
+                gr = new GuestRes(outputTime, otp);
+                tableResults.add(gr);
+            }
+            
+            
+            
+            //newstops = new ArrayList<>();
+            
+            tx.commit();
+            return tableResults;
+        } catch (HibernateException ex) {
+            if (tx != null) {
+                tx.rollback();
+            }            
+            Logger.getLogger("con").info("Exception: " + ex.getMessage());
+            ex.printStackTrace(System.err);
+            
+        } finally {
+            s.close(); 
+        }
+        
+        return tableResults;
+    }
     
     
     
@@ -498,6 +705,76 @@ public class InterCityLines implements Serializable {
      */
     public void setArrival(Date arrival) {
         this.arrival = arrival;
+    }
+
+    /**
+     * @return the guestAgency
+     */
+    public String getGuestAgency() {
+        return guestAgency;
+    }
+
+    /**
+     * @param guestAgency the guestAgency to set
+     */
+    public void setGuestAgency(String guestAgency) {
+        this.guestAgency = guestAgency;
+    }
+
+    /**
+     * @return the guestFrom
+     */
+    public String getGuestFrom() {
+        return guestFrom;
+    }
+
+    /**
+     * @param guestFrom the guestFrom to set
+     */
+    public void setGuestFrom(String guestFrom) {
+        this.guestFrom = guestFrom;
+    }
+
+    /**
+     * @return the guestTo
+     */
+    public String getGuestTo() {
+        return guestTo;
+    }
+
+    /**
+     * @param guestTo the guestTo to set
+     */
+    public void setGuestTo(String guestTo) {
+        this.guestTo = guestTo;
+    }
+
+    /**
+     * @return the guestTimeFrom
+     */
+    public Date getGuestTimeFrom() {
+        return guestTimeFrom;
+    }
+
+    /**
+     * @param guestTimeFrom the guestTimeFrom to set
+     */
+    public void setGuestTimeFrom(Date guestTimeFrom) {
+        this.guestTimeFrom = guestTimeFrom;
+    }
+
+    /**
+     * @return the guestTimeTo
+     */
+    public Date getGuestTimeTo() {
+        return guestTimeTo;
+    }
+
+    /**
+     * @param guestTimeTo the guestTimeTo to set
+     */
+    public void setGuestTimeTo(Date guestTimeTo) {
+        this.guestTimeTo = guestTimeTo;
     }
     
 }

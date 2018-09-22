@@ -24,6 +24,52 @@
 
             <br/><br/>
             
+             <h:form id="dasda">
+                <p:panelGrid columns="2">
+                    <f:facet name="header">
+                        Filters
+                    </f:facet>
+
+                    <h:outputText value="Agency"/>
+                    <p:inputText value="${interCityLinesCtrl.guestAgency}" />
+
+                    <h:outputText value="From city"/>
+                    <p:inputText value="${interCityLinesCtrl.guestFrom}" />
+
+                    <h:outputText value="To city"/>
+                    <p:inputText value="${interCityLinesCtrl.guestTo}" />
+
+                    <h:outputText value="Departure"/>
+                    <p:calendar pattern="dd/mm/yyyy hh:mm:ss" value="${interCityLinesCtrl.guestTimeFrom}" />
+
+                    <h:outputText value="Arrival"/>
+                    <p:calendar pattern="dd/mm/yyyy hh:mm:ss" value="${interCityLinesCtrl.guestTimeTo}" />
+
+                </p:panelGrid>
+                <p:commandButton value="Apply" actionListener="#{interCityLinesCtrl.guestResults()}" update=":guestress" />
+
+             </h:form>
+            
+            
+            <h:form id="guestress">
+                <p:dataTable id="guesttableofres" var="res" value="#{interCityLinesCtrl.guestResults()}" rows="10"
+                                                 paginator="true"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+                        <p:column headerText="Time">
+                            <h:outputText value="#{res.time}" />
+                        </p:column>
+                     
+                        <p:column headerText="Path" >
+                            <h:outputText value="#{res.otp}"  />
+                        </p:column>
+                     
+                    </p:dataTable>
+                </h:form>
+            
+            
+            <br/><br/>
+            
              <h:form id="guesttop10">
                  <p:dataTable id="guesttabletop10" var="topp" value="#{interCityLinesCtrl.get10MostRecentLines()}" rows="10"
                                                  paginator="true"
