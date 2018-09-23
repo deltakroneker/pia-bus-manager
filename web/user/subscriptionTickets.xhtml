@@ -5,11 +5,11 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Request Manager</title>
+        <title>Subscription tickets</title>
     </h:head>
     <h:body>
         <div align="center"> 
-            <h:form id="requestmngr">
+            <h:form id="userst">
                 <p:panelGrid columns="3">   
                     <f:facet name="header">
                         <p:outputLabel id="userName">Welcome ${navigationCtrl.username} (</p:outputLabel>
@@ -17,15 +17,12 @@
                         <p:outputLabel id="lastName">${navigationCtrl.lastName})</p:outputLabel>
 
                     </f:facet>
-                    <p:commandButton value="Back" action="#{navigationCtrl.adminHome()}"/>
-                    <p:commandButton value="Home" action="#{navigationCtrl.adminHome()}"/>
+                    <p:commandButton value="Back" action="#{navigationCtrl.userHome()}"/>
+                    <p:commandButton value="Home" action="#{navigationCtrl.userHome()}"/>
                     <p:commandButton value="Logout" action="#{navigationCtrl.logout()}"/>
                 </p:panelGrid>          
             </h:form>
-            
             <br/><br/>
-            
-
         </div>    
     </h:body>
 </html>

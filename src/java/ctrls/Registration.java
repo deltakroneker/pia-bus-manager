@@ -5,6 +5,7 @@ import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import objs.Agency;
 import objs.Location;
@@ -66,6 +67,7 @@ public class Registration implements Serializable {
             
             tx.commit();
             resetAll();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "User successfuly registered!", null));
         } catch (HibernateException ex) {
             if (tx != null) {
                 tx.rollback();

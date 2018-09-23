@@ -21,6 +21,10 @@ public class Constants {
     public static String ADMINNB_PAGE = "/admin/newBus";
     public static String ADMINNA_PAGE = "/admin/newAgency";
 
+    public static String USERCLP_PAGE = "/user/cityLinePreview";
+    public static String USERICLP_PAGE = "/user/interCityLinePreview";
+    public static String USERST_PAGE = "/user/subscriptionTickets";
+    
     public static String SALT = "salt-bae";
     public static String ADMIN_USERNAME = "admin";
     

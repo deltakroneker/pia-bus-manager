@@ -42,7 +42,8 @@ public class Navigation implements Serializable {
             
             for (User user : list) {
                 if (user.getUsername().equals(getUsername()))
-                    if (getUsername().equals(Constants.ADMIN_USERNAME)) {
+                    if (user.getPassword().equals(getPassword())) {
+                        if (getUsername().equals(Constants.ADMIN_USERNAME)) {
                         address = adminHome();
                         //context.getExternalContext().getSessionMap().put("user", user);
                         firstName = user.getFirstname();
@@ -55,9 +56,14 @@ public class Navigation implements Serializable {
                         firstName = user.getFirstname();
                         lastName = user.getLastname();
                         break;
-                    }
-                else 
-                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username or password is not valid.", null));
+                    } 
+                } else {
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Password is not valid.", null));
+                }   
+            }
+            
+            if(firstName == null || lastName == null){
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Username or password is not valid.", null));
             }
             
             tx.commit();
@@ -133,6 +139,18 @@ public class Navigation implements Serializable {
     
     public String adminNA(){
         return Constants.ADMINNA_PAGE;
+    }
+    
+    public String userCLP(){
+        return Constants.USERCLP_PAGE;
+    }
+    
+    public String userICLP(){
+        return Constants.USERICLP_PAGE;
+    }
+    
+    public String userST(){
+        return Constants.USERST_PAGE;
     }
     
     /**

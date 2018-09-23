@@ -10,7 +10,7 @@
     <h:body>
         <div align="center"> 
             <h:form id="guestmenu">
-                <p:panelGrid columns="2">   
+                <p:panelGrid columns="3">   
                     <f:facet name="header">
                         <p:outputLabel id="userName">Welcome Guest (</p:outputLabel>
                     </f:facet>
@@ -40,10 +40,10 @@
                     <p:inputText value="${interCityLinesCtrl.guestTo}" />
 
                     <h:outputText value="Departure"/>
-                    <p:calendar pattern="dd/mm/yyyy hh:mm:ss" value="${interCityLinesCtrl.guestTimeFrom}" />
+                    <p:calendar value="${interCityLinesCtrl.guestTimeFrom}" />
 
                     <h:outputText value="Arrival"/>
-                    <p:calendar pattern="dd/mm/yyyy hh:mm:ss" value="${interCityLinesCtrl.guestTimeTo}" />
+                    <p:calendar value="${interCityLinesCtrl.guestTimeTo}" />
 
                 </p:panelGrid>
                 <p:commandButton value="Apply" actionListener="#{interCityLinesCtrl.guestResults()}" update=":guestress" />

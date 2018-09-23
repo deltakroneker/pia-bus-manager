@@ -8,6 +8,7 @@
         <title>Login</title>
     </h:head>
     <h:body>
+        <p:growl id="msgs" showDetail="true" autoUpdate="true" />
         <div align="center">
 
             <h:form id="login-form">
@@ -20,17 +21,18 @@
                         Login form
                     </f:facet>
                     <h:outputText value="Username"/>
-                    <p:inputText value="${navigationCtrl.username}" />
-
+                    <p:inputText id="kek" value="${navigationCtrl.username}" required="true" />
+                    
                     <h:outputText value="Password"/>
-                    <p:password value="${navigationCtrl.password}" />
+                    <p:password value="${navigationCtrl.password}" required="true"/>
 
                     <f:facet name="footer">
-                            <p:commandButton value="Login" action="#{navigationCtrl.login()}" />
+                        <p:commandButton value="Login" action="#{navigationCtrl.login()}" ajax="false"/>
                     </f:facet>
-
+                    
                 </p:panelGrid>
-                
+                <p:message for="kek"/>
+
                 <br></br>
 
                 <p:panelGrid columns="2">
@@ -46,7 +48,7 @@
                     </h:form>
 
                 </p:panelGrid>
-
+                
             </h:form>
         </div>
 

@@ -8,6 +8,8 @@
         <title>Register</title>
     </h:head>
     <h:body>
+        <p:growl id="msgs" showDetail="true" autoUpdate="true" />
+
         <div align="center" >
         
             <h:form id="regmenu"> 
@@ -60,10 +62,21 @@
                     <p:inputText value="${registrationCtrl.email}" />
 
                     <f:facet name="footer">
-                        <p:commandButton value="Register" actionListener="#{registrationCtrl.addUser()}" update=":nacreate" />
+                        <h:form>
+                            <!--<p:captcha id="captcha"
+                                required="true"
+                                requiredMessage="Captcha entries required"
+                                validatorMessage=
+                                "Text does not match. Try again."/> 
+                            <p:message for="captcha"/>-->
+                            <p:commandButton id="RegisterSuccess" value="Register" actionListener="#{registrationCtrl.addUser()}" update=":nacreate" ajax="false"/>
+                            <p:message for="RegisterSuccess"/>
+
+                        </h:form>
                     </f:facet>
                 
                 </p:panelGrid>
+            
                 
             </h:form> <br/><br/>
     
